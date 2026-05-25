@@ -1,0 +1,134 @@
+import { useState } from "react";
+import { Link, NavLink } from "react-router";
+
+import { useTheme } from "../Context/ThemeContext";
+import ThemeToggle from "./ThemeToggle/ThemeToggle";
+
+function Navbar() {
+  const { darkMode } = useTheme();
+
+  // Fake User
+  // Replace with Firebase user later
+  const user = null;
+
+  const [openDropdown, setOpenDropdown] = useState(false);
+
+  return (
+    <nav
+      className={`fixed top-0 left-0 z-50 w-full border-b backdrop-blur-xl transition-all duration-300 ${
+        darkMode
+          ? "border-white/10 bg-black/30 text-white"
+          : "border-black/10 bg-white/40 text-black"
+      }`}
+    >
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+        {/* Logo */}
+         <h1 className="text-2xl font-black">
+            Neural
+            <span
+              className={
+                darkMode
+                  ? "text-cyan-400"
+                  : "text-blue-600"
+              }
+            >
+              Stack
+            </span>
+          </h1>
+
+        {/* Links */}
+        <div className="hidden gap-8 md:flex">
+          <Link to="/">Home</Link>
+
+          <Link to="/add-model">Add Model</Link>
+
+          <Link to="/all-models">All Models</Link>
+        </div>
+
+        {/* Right Side */}
+        <div className="flex items-center gap-4">
+          <ThemeToggle />
+
+          {/* If Logged In */}
+          {user ? (
+            <div className="relative">
+              {/* Profile Image */}
+              <img
+                onClick={() => setOpenDropdown(!openDropdown)}
+                src={user.photoURL}
+                alt="profile"
+                className="h-11 w-11 cursor-pointer rounded-full border-2 border-cyan-400 object-cover"
+              />
+
+              {/* Dropdown */}
+              {openDropdown && (
+                <div
+                  className={`absolute right-0 mt-4 w-72 rounded-2xl border p-5 shadow-2xl backdrop-blur-xl ${
+                    darkMode
+                      ? "border-white/10 bg-black/80"
+                      : "border-black/10 bg-white/90"
+                  }`}
+                >
+                  {/* User Info */}
+                  <div className="border-b border-white/10 pb-4">
+                    <h2 className="text-lg font-black">{user.displayName}</h2>
+
+                    <p
+                      className={`mt-1 text-sm ${
+                        darkMode ? "text-gray-400" : "text-gray-600"
+                      }`}
+                    >
+                      {user.email}
+                    </p>
+                  </div>
+
+                  {/* Links */}
+                  <div className="mt-4 flex flex-col gap-3">
+                    <Link
+                      to="/purchase"
+                      className={`rounded-xl px-4 py-3 transition-all duration-300 ${
+                        darkMode ? "hover:bg-white/10" : "hover:bg-black/5"
+                      }`}
+                    >
+                      Model Purchase
+                    </Link>
+
+                    <Link
+                      to="/my-models"
+                      className={`rounded-xl px-4 py-3 transition-all duration-300 ${
+                        darkMode ? "hover:bg-white/10" : "hover:bg-black/5"
+                      }`}
+                    >
+                      My Models
+                    </Link>
+                    <Link
+                      to="/my-models"
+                      className={`rounded-xl px-4 py-3 transition-all duration-300 ${
+                        darkMode ? "hover:bg-white/10" : "hover:bg-black/5"
+                      }`}
+                    >
+                      Logout
+                    </Link>
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            <NavLink
+                to="/login"
+              className={`rounded-xl px-5 py-2 font-bold transition-all duration-300 ${
+                darkMode
+                  ? "bg-cyan-400 text-black hover:bg-cyan-300"
+                  : "bg-blue-600 text-white hover:bg-blue-500"
+              }`}
+            >
+              Login
+            </NavLink>
+          )}
+        </div>
+      </div>
+    </nav>
+  );
+}
+
+export default Navbar;
