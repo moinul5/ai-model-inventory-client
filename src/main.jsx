@@ -11,6 +11,7 @@ import AddModel from "./Pages/AddModel";
 import AllModels from "./Pages/AllModels";
 import Login from "./Pages/Login";
 import Registration from "./Pages/Registration";
+import AuthProvider from "./Context/AuthProvider";
 
 const router = createBrowserRouter([
   {
@@ -22,29 +23,31 @@ const router = createBrowserRouter([
         Component: Home,
       },
       {
-        path: 'add-model',
-        element: <AddModel></AddModel>
+        path: "add-model",
+        element: <AddModel></AddModel>,
       },
       {
-        path: 'all-models',
-        element: <AllModels></AllModels>
+        path: "all-models",
+        element: <AllModels></AllModels>,
       },
       {
-        path: 'login',
-        element: <Login></Login>
+        path: "login",
+        element: <Login></Login>,
       },
       {
-        path: 'register',
-        element: <Registration></Registration>
-      }
+        path: "register",
+        element: <Registration></Registration>,
+      },
     ],
   },
 ]);
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <ThemeProvider>
-      <RouterProvider router={router} />
-    </ThemeProvider>
+    <AuthProvider>
+      <ThemeProvider>
+        <RouterProvider router={router} />
+      </ThemeProvider>
+    </AuthProvider>
   </StrictMode>,
 );

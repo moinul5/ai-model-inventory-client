@@ -1,19 +1,58 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 
 import { useTheme } from "../Context/ThemeContext";
+import AuthContext from "../Context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
-const Form = () => {
+const Login = () => {
   const { darkMode } = useTheme();
+  const { user, signInWithGoogle, signInWithEmail } = useContext(AuthContext);
+  const navigation = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+    const rememberMe = e.target.rememberMe.checked;
+
+    const userData = {
+      email,
+      password,
+      rememberMe,
+    };
+    signInWithEmail(email, password)
+      .then((result) => {
+        console.log("User signed in:", result.user);
+        navigation("/");
+      })
+      .catch((error) => {
+        console.error("Error signing in:", error);
+      })
+    ;
+  };
+
+
+
+  const handleGoogleSignIn = () => {
+    signInWithGoogle()
+      .then((result) => {
+        console.log("User signed in with Google:", result.user);
+        navigation("/");
+      })
+      .catch((error) => {
+        console.error("Error signing in with Google:", error);
+      });
+  };
 
   return (
-    <StyledWrapper darkMode={darkMode}>
+    <StyledWrapper $darkMode={darkMode}>
       <div
         className={`min-h-screen flex items-center justify-center transition-all duration-500 ${
           darkMode ? "bg-black text-white" : "bg-[#f4f4f5] text-black"
         }`}
       ></div>
-      <form className="form">
+      <form className="form" onSubmit={handleSubmit}>
         {/* Heading */}
         <div className="heading">
           <h1>Welcome Back</h1>
@@ -37,6 +76,7 @@ const Form = () => {
           </svg>
 
           <input
+            name="email"
             type="email"
             className="input"
             placeholder="Enter your Email"
@@ -59,6 +99,7 @@ const Form = () => {
           </svg>
 
           <input
+            name="password"
             type="password"
             className="input"
             placeholder="Enter your Password"
@@ -68,7 +109,7 @@ const Form = () => {
         {/* Remember */}
         <div className="flex-row">
           <div className="remember">
-            <input type="checkbox" />
+            <input type="checkbox" name="rememberMe" />
             <label>Remember me</label>
           </div>
 
@@ -76,12 +117,14 @@ const Form = () => {
         </div>
 
         {/* Login */}
-        <button className="button-submit">Login</button>
+        <button type="submit" className="button-submit">
+          Login
+        </button>
 
         {/* Register */}
         <p className="p">
           Don&apos;t have an account?
-          <span className="span"> Sign Up</span>
+          <span className="span" onClick={()=> navigation('/register')}> Sign Up</span>
         </p>
 
         {/* Divider */}
@@ -92,7 +135,7 @@ const Form = () => {
         </div>
 
         {/* Google */}
-        <button className="google-btn">
+        <div className="google-btn" onClick={handleGoogleSignIn}>
           <svg
             version="1.1"
             width={20}
@@ -105,7 +148,7 @@ const Form = () => {
             />
           </svg>
           Continue with Google
-        </button>
+        </div>
       </form>
     </StyledWrapper>
   );
@@ -120,8 +163,7 @@ const StyledWrapper = styled.div`
 
   padding: 40px;
 
-  background: ${({ darkMode }) =>
-    darkMode ? "#000000" : "#f4f4f5"};
+  background: ${({ $darkMode }) => ($darkMode ? "#000000" : "#f4f4f5")};
 
   transition: background-color 0.3s ease;
 
@@ -140,19 +182,19 @@ const StyledWrapper = styled.div`
 
     transition: all 0.3s ease;
 
-    background: ${({ darkMode }) =>
-      darkMode ? "#000000" : "rgba(255, 255, 255, 0.85)"};
+    background: ${({ $darkMode }) =>
+      $darkMode ? "#000000" : "rgba(255, 255, 255, 0.85)"};
 
     border: 1px solid
-      ${({ darkMode }) =>
-        darkMode ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)"};
+      ${({ $darkMode }) =>
+        $darkMode ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)"};
 
-    box-shadow: ${({ darkMode }) =>
-      darkMode
+    box-shadow: ${({ $darkMode }) =>
+      $darkMode
         ? "0 10px 40px rgba(0,0,0,0.6)"
         : "0 10px 40px rgba(0,0,0,0.08)"};
 
-    color: ${({ darkMode }) => (darkMode ? "#ffffff" : "#111827")};
+    color: ${({ $darkMode }) => ($darkMode ? "#ffffff" : "#111827")};
   }
 
   .heading {
@@ -168,14 +210,14 @@ const StyledWrapper = styled.div`
   .heading p {
     margin-top: 8px;
 
-    color: ${({ darkMode }) => (darkMode ? "#94a3b8" : "#6b7280")};
+    color: ${({ $darkMode }) => ($darkMode ? "#94a3b8" : "#6b7280")};
   }
 
   .flex-column label {
     font-size: 14px;
     font-weight: 600;
 
-    color: ${({ darkMode }) => (darkMode ? "#e5e7eb" : "#111827")};
+    color: ${({ $darkMode }) => ($darkMode ? "#e5e7eb" : "#111827")};
   }
 
   .inputForm {
@@ -190,24 +232,24 @@ const StyledWrapper = styled.div`
 
     transition: 0.3s ease;
 
-    background: ${({ darkMode }) =>
-      darkMode ? "rgba(255,255,255,0.04)" : "#ffffff"};
+    background: ${({ $darkMode }) =>
+      $darkMode ? "rgba(255,255,255,0.04)" : "#ffffff"};
 
     border: 1.5px solid
-      ${({ darkMode }) => (darkMode ? "rgba(255,255,255,0.08)" : "#e5e7eb")};
+      ${({ $darkMode }) => ($darkMode ? "rgba(255,255,255,0.08)" : "#e5e7eb")};
   }
 
   .inputForm:focus-within {
-    border-color: ${({ darkMode }) => (darkMode ? "#06b6d4" : "#2563eb")};
+    border-color: ${({ $darkMode }) => ($darkMode ? "#06b6d4" : "#2563eb")};
 
-    box-shadow: ${({ darkMode }) =>
-      darkMode
+    box-shadow: ${({ $darkMode }) =>
+      $darkMode
         ? "0 0 0 4px rgba(6,182,212,0.1)"
         : "0 0 0 4px rgba(37,99,235,0.1)"};
   }
 
   .inputForm svg {
-    fill: ${({ darkMode }) => (darkMode ? "#94a3b8" : "#6b7280")};
+    fill: ${({ $darkMode }) => ($darkMode ? "#94a3b8" : "#6b7280")};
   }
 
   .input {
@@ -219,15 +261,25 @@ const StyledWrapper = styled.div`
     border: none;
     outline: none;
 
-    background: transparent;
+    background: ${({ $darkMode }) =>
+      $darkMode ? "transparent" : "transparent"};
 
     font-size: 15px;
 
-    color: ${({ darkMode }) => (darkMode ? "#ffffff" : "#111827")};
+    color: ${({ $darkMode }) => ($darkMode ? "#ffffff" : "#111827")};
+  }
+
+  .input:-webkit-autofill,
+  .input:-webkit-autofill:hover,
+  .input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px
+      ${({ $darkMode }) => ($darkMode ? "#0a0a0a" : "#ffffff")} inset !important;
+    -webkit-text-fill-color: ${({ $darkMode }) =>
+      $darkMode ? "#ffffff" : "#111827"} !important;
   }
 
   .input::placeholder {
-    color: ${({ darkMode }) => (darkMode ? "#64748b" : "#9ca3af")};
+    color: ${({ $darkMode }) => ($darkMode ? "#64748b" : "#9ca3af")};
   }
 
   .flex-row {
@@ -245,7 +297,7 @@ const StyledWrapper = styled.div`
   .remember label {
     font-size: 14px;
 
-    color: ${({ darkMode }) => (darkMode ? "#cbd5e1" : "#374151")};
+    color: ${({ $darkMode }) => ($darkMode ? "#cbd5e1" : "#374151")};
   }
 
   .span {
@@ -255,7 +307,7 @@ const StyledWrapper = styled.div`
 
     transition: 0.3s ease;
 
-    color: ${({ darkMode }) => (darkMode ? "#06b6d4" : "#2563eb")};
+    color: ${({ $darkMode }) => ($darkMode ? "#06b6d4" : "#2563eb")};
   }
 
   .span:hover {
@@ -275,21 +327,21 @@ const StyledWrapper = styled.div`
 
     transition: 0.3s ease;
 
-    background: ${({ darkMode }) => (darkMode ? "#06b6d4" : "#2563eb")};
+    background: ${({ $darkMode }) => ($darkMode ? "#06b6d4" : "#2563eb")};
 
-    color: ${({ darkMode }) => (darkMode ? "#000000" : "#ffffff")};
+    color: ${({ $darkMode }) => ($darkMode ? "#000000" : "#ffffff")};
   }
 
   .button-submit:hover {
     transform: translateY(-2px);
-    background: ${({ darkMode }) => (darkMode ? "#0891b2" : "#1d4ed8")};
+    background: ${({ $darkMode }) => ($darkMode ? "#0891b2" : "#1d4ed8")};
   }
 
   .p {
     text-align: center;
     font-size: 14px;
 
-    color: ${({ darkMode }) => (darkMode ? "#cbd5e1" : "#374151")};
+    color: ${({ $darkMode }) => ($darkMode ? "#cbd5e1" : "#374151")};
   }
 
   .divider {
@@ -304,14 +356,14 @@ const StyledWrapper = styled.div`
     flex: 1;
     height: 1px;
 
-    background: ${({ darkMode }) =>
-      darkMode ? "rgba(255,255,255,0.08)" : "#e5e7eb"};
+    background: ${({ $darkMode }) =>
+      $darkMode ? "rgba(255,255,255,0.08)" : "#e5e7eb"};
   }
 
   .divider p {
     font-size: 13px;
 
-    color: ${({ darkMode }) => (darkMode ? "#94a3b8" : "#6b7280")};
+    color: ${({ $darkMode }) => ($darkMode ? "#94a3b8" : "#6b7280")};
   }
 
   .google-btn {
@@ -331,20 +383,20 @@ const StyledWrapper = styled.div`
 
     transition: 0.3s ease;
 
-    background: ${({ darkMode }) =>
-      darkMode ? "rgba(255,255,255,0.05)" : "#ffffff"};
+    background: ${({ $darkMode }) =>
+      $darkMode ? "rgba(255,255,255,0.05)" : "#ffffff"};
 
-    color: ${({ darkMode }) => (darkMode ? "#ffffff" : "#111827")};
+    color: ${({ $darkMode }) => ($darkMode ? "#ffffff" : "#111827")};
 
     border: 1.5px solid
-      ${({ darkMode }) => (darkMode ? "rgba(255,255,255,0.08)" : "#e5e7eb")};
+      ${({ $darkMode }) => ($darkMode ? "rgba(255,255,255,0.08)" : "#e5e7eb")};
   }
 
   .google-btn:hover {
     transform: translateY(-2px);
 
-    border-color: ${({ darkMode }) => (darkMode ? "#06b6d4" : "#2563eb")};
+    border-color: ${({ $darkMode }) => ($darkMode ? "#06b6d4" : "#2563eb")};
   }
 `;
 
-export default Form;
+export default Login;

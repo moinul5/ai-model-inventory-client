@@ -12,10 +12,12 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.3.0",
     "axios": "^1.16.1",
+    "firebase": "^12.13.0",
     "ogl": "^1.0.11",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "react-router-dom": "^7.15.1",
+    "react-toastify": "^11.1.0",
     "styled-components": "^6.4.2",
     "tailwindcss": "^4.3.0"
   },
