@@ -41,7 +41,7 @@ function Footer() {
         {/* GitHub Links */}
         <div className="flex flex-col items-center gap-3 md:items-end">
           <a
-            href="https://github.com/your-client-repo"
+            href="https://github.com/moinul5/ai-model-inventory-client"
             target="_blank"
             rel="noreferrer"
             className={`transition-all duration-300 hover:scale-105 ${
@@ -54,7 +54,7 @@ function Footer() {
           </a>
 
           <a
-            href="https://github.com/your-server-repo"
+            href="https://github.com/moinul5/ai-model-inventory-server"
             target="_blank"
             rel="noreferrer"
             className={`transition-all duration-300 hover:scale-105 ${

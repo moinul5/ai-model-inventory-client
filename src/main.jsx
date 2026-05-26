@@ -6,12 +6,15 @@ import Root from "./layout/Root";
 import "./index.css";
 import Home from "./Pages/Home";
 import { ThemeProvider } from "./Context/ThemeContext";
-import AllModel from "./Pages/AllModels";
 import AddModel from "./Pages/AddModel";
 import AllModels from "./Pages/AllModels";
 import Login from "./Pages/Login";
 import Registration from "./Pages/Registration";
 import AuthProvider from "./Context/AuthProvider";
+import PrivateRoute from "./Components/PrivateRoute";
+import ModelDetails from "./Pages/ModelDetails";
+import Purchase from "./Pages/Purchase";
+import MyModels from "./Pages/MyModels";
 
 const router = createBrowserRouter([
   {
@@ -24,11 +27,16 @@ const router = createBrowserRouter([
       },
       {
         path: "add-model",
-        element: <AddModel></AddModel>,
+        element: 
+          <PrivateRoute><AddModel></AddModel></PrivateRoute>,
       },
       {
         path: "all-models",
         element: <AllModels></AllModels>,
+      },
+      {
+        path: "model/:id",
+        element:<PrivateRoute><ModelDetails></ModelDetails></PrivateRoute>  ,
       },
       {
         path: "login",
@@ -38,6 +46,14 @@ const router = createBrowserRouter([
         path: "register",
         element: <Registration></Registration>,
       },
+      {
+        path: 'purchase',
+        element: <PrivateRoute><Purchase></Purchase></PrivateRoute>,
+      },
+      {
+        path: 'my-models',
+        element: <PrivateRoute><MyModels></MyModels></PrivateRoute>,
+      }
     ],
   },
 ]);

@@ -1,15 +1,14 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link, NavLink } from "react-router";
 
 import { useTheme } from "../Context/ThemeContext";
 import ThemeToggle from "./ThemeToggle/ThemeToggle";
+import AuthContext from "../Context/AuthContext";
 
 function Navbar() {
   const { darkMode } = useTheme();
+  const { user,signOut } = useContext(AuthContext);
 
-  // Fake User
-  // Replace with Firebase user later
-  const user = null;
 
   const [openDropdown, setOpenDropdown] = useState(false);
 
@@ -55,7 +54,7 @@ function Navbar() {
               {/* Profile Image */}
               <img
                 onClick={() => setOpenDropdown(!openDropdown)}
-                src={user.photoURL}
+                src={user?.photoURL}
                 alt="profile"
                 className="h-11 w-11 cursor-pointer rounded-full border-2 border-cyan-400 object-cover"
               />
@@ -102,7 +101,7 @@ function Navbar() {
                       My Models
                     </Link>
                     <Link
-                      to="/my-models"
+                      onClick={()=>signOut() }
                       className={`rounded-xl px-4 py-3 transition-all duration-300 ${
                         darkMode ? "hover:bg-white/10" : "hover:bg-black/5"
                       }`}
