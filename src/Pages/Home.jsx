@@ -50,7 +50,7 @@ function Home() {
           className={`absolute inset-0 z-10 pointer-events-none ${
             darkMode
               ? "bg-black/50"
-              : "bg-white/40"
+              : "bg-white/30"
           }`}
         ></div>
 

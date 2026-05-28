@@ -1,5 +1,6 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import styled from "styled-components";
+import { toast } from "react-toastify";
 
 import { useTheme } from "../Context/ThemeContext";
 import AuthContext from "../Context/AuthContext";
@@ -9,39 +10,92 @@ const Login = () => {
   const { darkMode } = useTheme();
   const { user, signInWithGoogle, signInWithEmail } = useContext(AuthContext);
   const navigation = useNavigate();
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setError("");
+    setLoading(true);
+    
     const email = e.target.email.value;
     const password = e.target.password.value;
     const rememberMe = e.target.rememberMe.checked;
 
-    const userData = {
-      email,
-      password,
-      rememberMe,
-    };
+    if (!email || !password) {
+      setError("Please fill in all fields");
+      setLoading(false);
+      return;
+    }
+
     signInWithEmail(email, password)
       .then((result) => {
         console.log("User signed in:", result.user);
-        navigation("/");
+        setError("");
+        setLoading(false);
+        toast.success("Login successful! Redirecting...", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+        setTimeout(() => navigation("/"), 500);
       })
       .catch((error) => {
         console.error("Error signing in:", error);
-      })
-    ;
+        
+        // Handle specific Firebase errors
+        let errorMessage = "Failed to sign in. Please try again.";
+        if (error.code === "auth/user-not-found") {
+          errorMessage = "User account not found. Please register.";
+        } else if (error.code === "auth/wrong-password") {
+          errorMessage = "Invalid email or password.";
+        } else if (error.code === "auth/invalid-email") {
+          errorMessage = "Please enter a valid email address.";
+        } else if (error.code === "auth/user-disabled") {
+          errorMessage = "This account has been disabled.";
+        } else if (error.message) {
+          errorMessage = error.message;
+        }
+        
+        setError(errorMessage);
+        setLoading(false);
+      });
   };
 
-
-
   const handleGoogleSignIn = () => {
+    setError("");
+    setLoading(true);
+    
     signInWithGoogle()
       .then((result) => {
         console.log("User signed in with Google:", result.user);
-        navigation("/");
+        setError("");
+        setLoading(false);
+        toast.success("Welcome! Signed in with Google", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+        setTimeout(() => navigation("/"), 500);
       })
       .catch((error) => {
         console.error("Error signing in with Google:", error);
+        
+        let errorMessage = "Failed to sign in with Google. Please try again.";
+        if (error.code === "auth/popup-closed-by-user") {
+          errorMessage = "Sign-in popup was closed.";
+        } else if (error.message) {
+          errorMessage = error.message;
+        }
+        
+        setError(errorMessage);
+        setLoading(false);
       });
   };
 
@@ -59,6 +113,27 @@ const Login = () => {
 
           <p>Sign in to continue managing your AI ecosystem.</p>
         </div>
+
+        {/* Error Message */}
+        {error && (
+          <div className="error-message">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <span>{error}</span>
+          </div>
+        )}
 
         {/* Email */}
         <div className="flex-column">
@@ -117,8 +192,12 @@ const Login = () => {
         </div>
 
         {/* Login */}
-        <button type="submit" className="button-submit">
-          Login
+        <button 
+          type="submit" 
+          className="button-submit"
+          disabled={loading}
+        >
+          {loading ? "Logging in..." : "Login"}
         </button>
 
         {/* Register */}
@@ -135,7 +214,11 @@ const Login = () => {
         </div>
 
         {/* Google */}
-        <div className="google-btn" onClick={handleGoogleSignIn}>
+        <div 
+          className="google-btn" 
+          onClick={handleGoogleSignIn}
+          style={{ pointerEvents: loading ? "none" : "auto", opacity: loading ? 0.6 : 1 }}
+        >
           <svg
             version="1.1"
             width={20}
@@ -211,6 +294,36 @@ const StyledWrapper = styled.div`
     margin-top: 8px;
 
     color: ${({ $darkMode }) => ($darkMode ? "#94a3b8" : "#6b7280")};
+  }
+
+  .error-message {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #ef4444;
+    font-size: 14px;
+    font-weight: 500;
+    animation: slideIn 0.3s ease;
+  }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .error-message svg {
+    flex-shrink: 0;
+    stroke: #ef4444;
   }
 
   .flex-column label {
@@ -332,9 +445,15 @@ const StyledWrapper = styled.div`
     color: ${({ $darkMode }) => ($darkMode ? "#000000" : "#ffffff")};
   }
 
-  .button-submit:hover {
+  .button-submit:hover:not(:disabled) {
     transform: translateY(-2px);
     background: ${({ $darkMode }) => ($darkMode ? "#0891b2" : "#1d4ed8")};
+  }
+
+  .button-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
   }
 
   .p {

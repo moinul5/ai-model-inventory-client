@@ -2,6 +2,8 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Root from "./layout/Root";
 import "./index.css";
 import Home from "./Pages/Home";
@@ -15,6 +17,8 @@ import PrivateRoute from "./Components/PrivateRoute";
 import ModelDetails from "./Pages/ModelDetails";
 import Purchase from "./Pages/Purchase";
 import MyModels from "./Pages/MyModels";
+import NotFound from "./Pages/NotFound";
+import UpdateModel from "./Pages/UpdateModel";
 
 const router = createBrowserRouter([
   {
@@ -53,6 +57,14 @@ const router = createBrowserRouter([
       {
         path: 'my-models',
         element: <PrivateRoute><MyModels></MyModels></PrivateRoute>,
+      },
+      {
+        path: '/edit-model/:id',
+        element: <PrivateRoute><UpdateModel></UpdateModel></PrivateRoute>,
+      },
+      {
+        path: '*',
+        element: <NotFound></NotFound>,
       }
     ],
   },
@@ -63,6 +75,18 @@ createRoot(document.getElementById("root")).render(
     <AuthProvider>
       <ThemeProvider>
         <RouterProvider router={router} />
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark"
+        />
       </ThemeProvider>
     </AuthProvider>
   </StrictMode>,

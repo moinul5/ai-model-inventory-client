@@ -4,10 +4,11 @@ import { Link, NavLink } from "react-router";
 import { useTheme } from "../Context/ThemeContext";
 import ThemeToggle from "./ThemeToggle/ThemeToggle";
 import AuthContext from "../Context/AuthContext";
+import Loader from "./Loader";
 
 function Navbar() {
   const { darkMode } = useTheme();
-  const { user,signOut } = useContext(AuthContext);
+  const { user,signOut,loading } = useContext(AuthContext);
 
 
   const [openDropdown, setOpenDropdown] = useState(false);
@@ -46,10 +47,13 @@ function Navbar() {
 
         {/* Right Side */}
         <div className="flex items-center gap-4">
-          <ThemeToggle />
+          <ThemeToggle /> 
+
+          {/* Loader when loading */}
+          {loading && <Loader size="sm" />}
 
           {/* If Logged In */}
-          {user ? (
+          {user && !loading ? (
             <div className="relative">
               {/* Profile Image */}
               <img
@@ -112,7 +116,7 @@ function Navbar() {
                 </div>
               )}
             </div>
-          ) : (
+          ) : !loading ? (
             <NavLink
                 to="/login"
               className={`rounded-xl px-5 py-2 font-bold transition-all duration-300 ${
@@ -123,7 +127,7 @@ function Navbar() {
             >
               Login
             </NavLink>
-          )}
+          ) : null}
         </div>
       </div>
     </nav>

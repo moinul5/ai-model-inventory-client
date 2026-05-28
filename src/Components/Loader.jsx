@@ -1,17 +1,19 @@
-import React from "react";
 import styled from "styled-components";
 import { useTheme } from "../Context/ThemeContext";
 
-const Loader = () => {
+const Loader = ({ size = "full" }) => {
   const { darkMode } = useTheme();
+  const isSmall = size === "sm";
+  const svgSize = isSmall ? 24 : 100;
 
   return (
     <StyledWrapper
-      darkMode={darkMode}
-      className="flex items-center justify-center min-h-screen"
+      $darkMode={darkMode}
+      $isSmall={isSmall}
+      className={isSmall ? "" : "flex items-center justify-center min-h-screen"}
     >
       <div className="loader align-middle flex items-center justify-center">
-        <svg width={100} height={100} viewBox="0 0 100 100">
+        <svg width={svgSize} height={svgSize} viewBox="0 0 100 100">
           <defs>
             <mask id="clipping">
               <polygon points="0,0 100,0 100,100 0,100" fill="black" />
@@ -32,33 +34,43 @@ const Loader = () => {
 };
 
 const StyledWrapper = styled.div`
-  min-height: 100vh;
-
-  background: ${({ darkMode }) =>
-    darkMode
-      ? "linear-gradient(135deg, #000000, #0f172a)"
-      : "linear-gradient(135deg, #ffffff, #f1f5f9)"};
+  ${({ $isSmall }) =>
+    $isSmall
+      ? `
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+  `
+      : `
+    min-height: 100vh;
+    background: ${({ $darkMode }) =>
+      $darkMode
+        ? "linear-gradient(135deg, #000000, #0f172a)"
+        : "linear-gradient(135deg, #ffffff, #f1f5f9)"};
+  `};
 
   transition: all 0.3s ease;
 
   .loader {
-    --color-one: ${({ darkMode }) =>
-      darkMode ? "#60a5fa" : "#ffbf48"};
+    --color-one: ${({ $darkMode }) =>
+      $darkMode ? "#60a5fa" : "#ffbf48"};
 
-    --color-two: ${({ darkMode }) =>
-      darkMode ? "#2563eb" : "#be4a1d"};
+    --color-two: ${({ $darkMode }) =>
+      $darkMode ? "#2563eb" : "#be4a1d"};
 
-    --color-three: ${({ darkMode }) =>
-      darkMode ? "#60a5fa80" : "#ffbf4780"};
+    --color-three: ${({ $darkMode }) =>
+      $darkMode ? "#60a5fa80" : "#ffbf4780"};
 
-    --color-four: ${({ darkMode }) =>
-      darkMode ? "#2563eb80" : "#bf4a1d80"};
+    --color-four: ${({ $darkMode }) =>
+      $darkMode ? "#2563eb80" : "#bf4a1d80"};
 
-    --color-five: ${({ darkMode }) =>
-      darkMode ? "#60a5fa40" : "#ffbf4740"};
+    --color-five: ${({ $darkMode }) =>
+      $darkMode ? "#60a5fa40" : "#ffbf4740"};
 
     --time-animation: 2s;
-    --size: 1;
+    --size: ${({ $isSmall }) => ($isSmall ? 0.2 : 1)};
 
     position: relative;
     border-radius: 50%;
