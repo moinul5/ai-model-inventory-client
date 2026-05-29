@@ -25,13 +25,11 @@ function Purchase() {
       axiosSecure
         .get(`/my-purchases?email=${user.email}`)
         .then((response) => {
-          console.log("Purchases fetched:", response.data);
           setPurchases(response.data);
           setError(null);
           setLoading(false);
         })
         .catch((error) => {
-          console.error("Error fetching purchases:", error);
           setError("Failed to load your purchases. Please try again.");
           setLoading(false);
         });
@@ -121,7 +119,6 @@ function Purchase() {
         ) : (
           <div className="purchase-grid">
             {purchases.map((purchase) => {
-              console.log("🔍 Purchase item:", purchase);
               
               // Try multiple ways to get model data
               let model = null;
@@ -129,23 +126,17 @@ function Purchase() {
               // Method 1: Check if modelInfo is an array
               if (purchase.modelInfo && Array.isArray(purchase.modelInfo) && purchase.modelInfo.length > 0) {
                 model = purchase.modelInfo[0];
-                console.log("✅ Found model in modelInfo array:", model);
               }
               // Method 2: Check if model properties exist directly on purchase
               else if (purchase.name && purchase.framework) {
                 model = purchase;
-                console.log("✅ Found model properties on purchase object:", model);
               }
               // Method 3: Check if it's not an array but still an object
               else if (purchase.modelInfo && typeof purchase.modelInfo === 'object' && !Array.isArray(purchase.modelInfo)) {
                 model = purchase.modelInfo;
-                console.log("✅ Found model as object in modelInfo:", model);
               }
               
-              console.log("📦 Extracted model:", model);
-              
               if (!model) {
-                console.warn("⚠️ No model data found for purchase:", purchase._id, purchase);
                 return null;
               }
 

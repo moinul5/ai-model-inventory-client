@@ -31,7 +31,6 @@ function MyModels() {
           setLoading(false);
         })
         .catch((error) => {
-          console.error("Error fetching user models:", error);
           setError("Failed to load your models. Please try again.");
           setLoading(false);
         });

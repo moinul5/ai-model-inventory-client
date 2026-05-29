@@ -13,7 +13,6 @@ function AllModels() {
   const [models, setModels] = useState([]);
   const [search, setSearch] = useState("");
   const [framework, setFramework] = useState("");
-  const [filteredModels, setFilteredModels] = useState([]);
 
   const frameworks = [
     "All Frameworks",
@@ -33,11 +32,9 @@ function AllModels() {
       .get("/models")
       .then((response) => {
         setModels(response.data);
-        setFilteredModels(response.data);
         setInitialLoading(false);
       })
       .catch((error) => {
-        console.error("Error fetching models:", error);
         setInitialLoading(false);
       });
   }, [axiosInstance]);
@@ -57,11 +54,9 @@ function AllModels() {
         .get(`/models?${params.toString()}`)
         .then((response) => {
           setModels(response.data);
-          setFilteredModels(response.data);
           setModelLoading(false);
         })
         .catch((error) => {
-          console.error("Error fetching models:", error);
           setModelLoading(false);
         });
     }, 300); // Debounce 300ms

@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useRef, useEffect } from "react";
 import { Link, NavLink } from "react-router";
 
 import { useTheme } from "../Context/ThemeContext";
@@ -10,8 +10,28 @@ function Navbar() {
   const { darkMode } = useTheme();
   const { user,signOut,loading } = useContext(AuthContext);
 
-
   const [openDropdown, setOpenDropdown] = useState(false);
+  const [openMenu, setOpenMenu] = useState(false);
+  const dropdownRef = useRef(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setOpenDropdown(false);
+      }
+    };
+
+    if (openDropdown) {
+      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("touchstart", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+    };
+  }, [openDropdown]);
 
   return (
     <nav
@@ -45,6 +65,16 @@ function Navbar() {
           <Link to="/all-models">All Models</Link>
         </div>
 
+        {/* Hamburger Menu for Mobile */}
+        <div className="md:hidden">
+          <button
+            onClick={() => setOpenMenu(!openMenu)}
+            className="text-2xl focus:outline-none"
+          >
+            {openMenu ? "✕" : "☰"}
+          </button>
+        </div>
+
         {/* Right Side */}
         <div className="flex items-center gap-4">
           <ThemeToggle /> 
@@ -54,7 +84,7 @@ function Navbar() {
 
           {/* If Logged In */}
           {user && !loading ? (
-            <div className="relative">
+            <div className="relative" ref={dropdownRef}>
               {/* Profile Image */}
               <img
                 onClick={() => setOpenDropdown(!openDropdown)}
@@ -130,6 +160,51 @@ function Navbar() {
           ) : null}
         </div>
       </div>
+
+      {/* Mobile Menu */}
+      {openMenu && (
+        <div
+          className={`border-t md:hidden ${
+            darkMode
+              ? "border-white/10 bg-black/30"
+              : "border-black/10 bg-white/40"
+          }`}
+        >
+          <div className="mx-auto px-4 py-3">
+            <div className="flex flex-col gap-2">
+              <Link
+                to="/"
+                onClick={() => setOpenMenu(false)}
+                className={`rounded-lg px-3 py-2 text-sm transition-all duration-300 ${
+                  darkMode ? "hover:bg-white/10" : "hover:bg-black/5"
+                }`}
+              >
+                Home
+              </Link>
+
+              <Link
+                to="/add-model"
+                onClick={() => setOpenMenu(false)}
+                className={`rounded-lg px-3 py-2 text-sm transition-all duration-300 ${
+                  darkMode ? "hover:bg-white/10" : "hover:bg-black/5"
+                }`}
+              >
+                Add Model
+              </Link>
+
+              <Link
+                to="/all-models"
+                onClick={() => setOpenMenu(false)}
+                className={`rounded-lg px-3 py-2 text-sm transition-all duration-300 ${
+                  darkMode ? "hover:bg-white/10" : "hover:bg-black/5"
+                }`}
+              >
+                All Models
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
     </nav>
   );
 }

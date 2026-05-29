@@ -30,7 +30,6 @@ const Login = () => {
 
     signInWithEmail(email, password)
       .then((result) => {
-        console.log("User signed in:", result.user);
         setError("");
         setLoading(false);
         toast.success("Login successful! Redirecting...", {
@@ -44,8 +43,6 @@ const Login = () => {
         setTimeout(() => navigation("/"), 500);
       })
       .catch((error) => {
-        console.error("Error signing in:", error);
-        
         // Handle specific Firebase errors
         let errorMessage = "Failed to sign in. Please try again.";
         if (error.code === "auth/user-not-found") {
@@ -71,7 +68,6 @@ const Login = () => {
     
     signInWithGoogle()
       .then((result) => {
-        console.log("User signed in with Google:", result.user);
         setError("");
         setLoading(false);
         toast.success("Welcome! Signed in with Google", {
@@ -85,8 +81,6 @@ const Login = () => {
         setTimeout(() => navigation("/"), 500);
       })
       .catch((error) => {
-        console.error("Error signing in with Google:", error);
-        
         let errorMessage = "Failed to sign in with Google. Please try again.";
         if (error.code === "auth/popup-closed-by-user") {
           errorMessage = "Sign-in popup was closed.";
