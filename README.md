@@ -1,6 +1,7 @@
 # AI Model Inventory Client
 
 A modern, responsive React-based web application for managing and exploring AI models. Features Firebase authentication, real-time model browsing, dark/light theme switching, and an intuitive user interface with WebGL animations.
+-[AI Model Inventory Server](https://github.com/moinul5/ai-model-inventory-server)
 
 ## 📋 Table of Contents
 
