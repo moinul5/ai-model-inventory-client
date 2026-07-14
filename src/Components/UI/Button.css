@@ -1,0 +1,363 @@
+/* Button Component Styles - Revenio Design System */
+
+/* Base Button Styles */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  font-family: inherit;
+  font-weight: var(--font-weight-semibold);
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  position: relative;
+  white-space: nowrap;
+  user-select: none;
+  outline: none;
+  
+  /* Touch-friendly minimum size */
+  min-height: 44px;
+  min-width: 44px;
+  
+  /* Typography */
+  font-size: var(--font-size-base);
+  line-height: 1.5;
+  
+  /* Focus styles */
+  &:focus-visible {
+    outline: 2px solid var(--color-primary-brand);
+    outline-offset: 2px;
+  }
+}
+
+/* Button Variants */
+
+/* Primary Button - Brand color background */
+.btn-primary {
+  background: var(--color-primary-brand);
+  color: white;
+  border: 1px solid var(--color-primary-brand);
+  border-radius: var(--radius-button);
+  
+  &:hover:not(:disabled):not(.btn-loading) {
+    background: var(--color-primary-brand-hover);
+    border-color: var(--color-primary-brand-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
+  
+  &:active:not(:disabled):not(.btn-loading) {
+    transform: translateY(0);
+    box-shadow: var(--shadow-sm);
+  }
+}
+
+/* Secondary Button - Transparent with brand border */
+.btn-secondary {
+  background: transparent;
+  color: var(--color-primary-brand);
+  border: 1px solid var(--color-primary-brand);
+  border-radius: var(--radius-button);
+  
+  &:hover:not(:disabled):not(.btn-loading) {
+    background: var(--color-primary-brand-light);
+    color: var(--color-primary-brand-dark);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
+  
+  &:active:not(:disabled):not(.btn-loading) {
+    transform: translateY(0);
+    background: var(--color-primary-brand-light);
+  }
+}
+
+[data-theme="dark"] .btn-secondary {
+  color: var(--color-primary-brand);
+  border-color: var(--color-primary-brand);
+  
+  &:hover:not(:disabled):not(.btn-loading) {
+    background: var(--color-primary-brand-dark);
+    color: white;
+  }
+}
+
+/* Outline Button - Neutral outline */
+.btn-outline {
+  background: transparent;
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-button);
+  
+  &:hover:not(:disabled):not(.btn-loading) {
+    background: var(--color-hover-bg);
+    border-color: var(--color-border-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
+  
+  &:active:not(:disabled):not(.btn-loading) {
+    transform: translateY(0);
+    background: var(--color-active-bg);
+  }
+}
+
+/* Button Sizes */
+.btn-small {
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--font-size-base);
+  min-height: 36px;
+  gap: var(--space-1);
+}
+
+.btn-medium {
+  padding: var(--space-3) var(--space-6);
+  font-size: var(--font-size-base);
+  min-height: 44px;
+  gap: var(--space-2);
+}
+
+.btn-large {
+  padding: var(--space-4) var(--space-8);
+  font-size: var(--font-size-lg);
+  min-height: 52px;
+  gap: var(--space-2);
+}
+
+/* Button States */
+.btn-disabled,
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+  
+  &:hover {
+    background: inherit;
+    border-color: inherit;
+    color: inherit;
+  }
+}
+
+.btn-loading {
+  cursor: not-allowed;
+  
+  .btn-content {
+    opacity: 0.7;
+  }
+}
+
+.btn-full-width {
+  width: 100%;
+  justify-content: center;
+}
+
+/* Icon Styles */
+.btn-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.btn-small .btn-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.btn-large .btn-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.btn-icon-left {
+  margin-right: calc(var(--space-1) * -1);
+}
+
+.btn-icon-right {
+  margin-left: calc(var(--space-1) * -1);
+}
+
+/* Loading Spinner */
+.btn-spinner {
+  display: inline-flex;
+  width: 16px;
+  height: 16px;
+  margin-right: var(--space-2);
+}
+
+.btn-small .btn-spinner {
+  width: 14px;
+  height: 14px;
+}
+
+.btn-large .btn-spinner {
+  width: 20px;
+  height: 20px;
+}
+
+.spinner {
+  width: 100%;
+  height: 100%;
+  animation: spin 1s linear infinite;
+}
+
+.spinner-track {
+  stroke: currentColor;
+  opacity: 0.2;
+}
+
+.spinner-fill {
+  stroke: currentColor;
+  stroke-dasharray: 31.416; /* 2 * π * r */
+  stroke-dashoffset: 31.416;
+  animation: progress 1.5s ease-in-out infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes progress {
+  0% {
+    stroke-dasharray: 0 31.416;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 15.708 15.708;
+    stroke-dashoffset: -7.854;
+  }
+  100% {
+    stroke-dasharray: 0 31.416;
+    stroke-dashoffset: -31.416;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .btn {
+    border-width: 2px;
+  }
+  
+  .btn-primary {
+    border: 2px solid var(--color-background);
+  }
+  
+  .btn-secondary,
+  .btn-outline {
+    border: 2px solid var(--color-text);
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .btn {
+    transition: none;
+    
+    &:hover:not(:disabled):not(.btn-loading) {
+      transform: none;
+    }
+    
+    &:active:not(:disabled):not(.btn-loading) {
+      transform: none;
+    }
+  }
+  
+  .spinner {
+    animation: none;
+  }
+  
+  .spinner-fill {
+    animation: none;
+    stroke-dasharray: 15.708 15.708;
+    stroke-dashoffset: -7.854;
+  }
+}
+
+/* Mobile Optimizations */
+@media (max-width: 767px) {
+  .btn {
+    /* Ensure minimum touch target size */
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  .btn-small {
+    min-height: 40px;
+    padding: var(--space-3) var(--space-4);
+  }
+  
+  .btn-medium {
+    min-height: 44px;
+    padding: var(--space-3) var(--space-6);
+  }
+  
+  .btn-large {
+    min-height: 52px;
+    padding: var(--space-4) var(--space-8);
+  }
+  
+  /* Stack icons vertically on very small screens if needed */
+  @media (max-width: 320px) {
+    .btn-full-width {
+      flex-direction: column;
+      gap: var(--space-1);
+      padding: var(--space-3);
+    }
+    
+    .btn-full-width .btn-icon {
+      margin: 0;
+    }
+  }
+}
+
+/* Button Group Styles (for multiple buttons together) */
+.btn-group {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.btn-group-vertical {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.btn-group-full-width .btn {
+  flex: 1;
+}
+
+/* Special button types */
+.btn-icon-only {
+  width: 44px;
+  padding: var(--space-3);
+  
+  .btn-content {
+    display: none;
+  }
+  
+  .btn-icon {
+    margin: 0;
+  }
+}
+
+.btn-icon-only.btn-small {
+  width: 36px;
+  padding: var(--space-2);
+}
+
+.btn-icon-only.btn-large {
+  width: 52px;
+  padding: var(--space-4);
+}

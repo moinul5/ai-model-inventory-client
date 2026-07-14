@@ -1,10 +1,13 @@
-import { useEffect, useState } from "react";
-
-import Orb from "../Components/Orb";
-import Navbar from "../Components/Navbar";
-import { NavLink } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate, NavLink  } from "react-router-dom";
 import { useTheme } from "../Context/ThemeContext";
 import useAxios from "../hooks/useAxios";
+
+// Components
+import Navbar from "../Components/Navbar";
+import HeroSection from "../Components/HeroSection";
+import Button, { ChevronRightIcon, SearchIcon } from "../Components/UI/Button";
+import Orb from "../Components/Orb";
 
 function Home() {
   const { darkMode } = useTheme();
